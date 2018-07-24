@@ -12,6 +12,7 @@ import glob
 from PIL import Image
 import json 
 from keras.applications.vgg16 import VGG16
+from keras.applications.resnet50 import ResNet50
 from keras.layers import Dropout, Dense, Flatten
 from keras.models import Model
 
@@ -58,4 +59,24 @@ def build_vgg_model(input_size = 224, nb_classes = 2):
     
     return final_model
 
+def build_resnet_model(input_size = 224, nb_classes = 2):
+    
+    resnet_model = ResNet50(
+            include_top = False,
+            weights='imagenet',
+            input_shape = (input_size, input_size, 3)
+            )
+    
+    resnet_output = Flatten()(resnet_model.output)
+    
+    resnet_output = Dense(4096,
+                       activation = 'relu')(resnet_output)
+    resnet_output = Dropout(0.5)(resnet_output)
+
+    resnet_output = Dense(nb_classes,
+                       activation = 'relu')(resnet_output)
+
+    final_model = Model(resnet_model.input, resnet_output)
+    
+    return final_model
 

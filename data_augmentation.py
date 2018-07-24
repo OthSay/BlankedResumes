@@ -13,9 +13,12 @@ from toolbox import prepare_data
 import matplotlib.pyplot as plt 
 import random
 
-def prepare_data_seg(resume_size = 224, 
+def prepare_data_seg(resumes, 
+                     labels, 
+                     resume_size = 224, 
                      icons_size = 24, 
-                     icon_per_resume = 3):
+                     icon_per_resume = 3 
+                     ):
     
     icons_sn_path  = '/Users/sayemothmane/Documents/MVA/Riminder/icons/145797-social-network-logo-collection/png'
     icons_es_path = '/Users/sayemothmane/Documents/MVA/Riminder/icons/png'
@@ -35,9 +38,9 @@ def prepare_data_seg(resume_size = 224,
     icons = np.array(icons)
 
 
-    x , y = prepare_data(resume_size)
+    #x , y = prepare_data(resume_size)
 
-    empty_resumes = x[y=='nothing', :, :,:]
+    empty_resumes = resumes[labels=='nothing', :, :,:]
         
     margin = 10
     new_resumes = []
