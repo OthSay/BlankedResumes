@@ -9,7 +9,7 @@ from keras.applications.vgg16 import VGG16
 from keras.applications.resnet50 import ResNet50
 from keras.layers import *
 from keras.models import Model
-
+from BilinearUpSampling import *
 
 def build_fcn_vgg_32(input_shape = (224, 224, 3), nb_classes = 2):
     
@@ -36,18 +36,9 @@ def build_fcn_vgg_32(input_shape = (224, 224, 3), nb_classes = 2):
                         activation = 'linear',
                         padding='valid', 
                         strides=(1, 1))(vgg_output)
-
-    vgg_output = Conv2DTranspose(nb_classes, 
-                                 kernel_size=(64,64) ,  
-                                 strides=(32,32)
-                                )(vgg_output)
     
-    vgg_output = Reshape(input_shape)(vgg_output)
-	vgg_output = Permute((2,1))
-                            (vgg_output)
-	vgg_output = Activation('softmax')(vgg_output)
+    vgg_output = BilinearUpSampling2D(size=(32, 32))(vgg_output)
     
-	final_model = Model( vgg_model.input , vgg_output )
-    
+    final_model=Model(vgg_model.input,vgg_output)
     
     return final_model
